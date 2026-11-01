@@ -1,0 +1,169 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Theme tokens ---------- */
+:root,
+:root[data-theme='dark'] {
+  --bg: 20 11 7;
+  --surface: 42 26 17;
+  --ink: 245 233 215;
+  --muted: 190 165 140;
+  --line: 255 230 200;
+  --gold: 212 162 76;
+  --rose: 201 139 122;
+  --glass: rgba(58, 36, 24, 0.42);
+  --glass-strong: rgba(42, 26, 17, 0.78);
+  --glass-border: rgba(243, 213, 138, 0.14);
+  --line-alpha: 0.1;
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --bg: 248 240 228;
+  --surface: 255 250 242;
+  --ink: 42 26 17;
+  --muted: 120 90 68;
+  --line: 90 56 37;
+  --gold: 168 118 40;
+  --rose: 176 106 90;
+  --glass: rgba(255, 250, 242, 0.62);
+  --glass-strong: rgba(255, 250, 242, 0.88);
+  --glass-border: rgba(168, 118, 40, 0.2);
+  color-scheme: light;
+}
+
+html {
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: rgb(var(--bg));
+  color: rgb(var(--ink));
+  font-family: Inter, Tajawal, system-ui, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+html[dir='rtl'] body,
+html[dir='rtl'] .font-display {
+  font-family: Tajawal, sans-serif;
+}
+
+/* Warm ambient glow behind everything */
+.ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(60vw 50vh at 85% -10%, rgb(var(--gold) / 0.16), transparent 60%),
+    radial-gradient(50vw 40vh at -10% 30%, rgb(var(--rose) / 0.12), transparent 60%),
+    radial-gradient(70vw 50vh at 50% 120%, rgb(var(--gold) / 0.1), transparent 60%);
+}
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@layer components {
+  .glass {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    box-shadow: 0 20px 50px -24px rgb(0 0 0 / 0.5), inset 0 1px 0 rgb(255 240 220 / 0.06);
+  }
+  .glass-strong {
+    background: var(--glass-strong);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+  }
+  .text-gold-gradient {
+    background: linear-gradient(100deg, #f7e1a1 0%, #d4a24c 30%, #f3d58a 48%, #c98b7a 70%, #e8b4a2 100%);
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 7s ease-in-out infinite;
+  }
+  :root[data-theme='light'] .text-gold-gradient {
+    background-image: linear-gradient(100deg, #9a6a1c 0%, #b8862f 30%, #d4a24c 48%, #a8604f 70%, #8f5a2a 100%);
+  }
+  .bg-gold-gradient {
+    background: linear-gradient(110deg, #f3d58a 0%, #d4a24c 35%, #e9c27a 50%, #c98b7a 80%, #d9a08e 100%);
+    background-size: 220% auto;
+    animation: shimmer 6s ease-in-out infinite;
+  }
+  .btn-gold {
+    @apply bg-gold-gradient relative inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold text-cocoa-950 shadow-glow transition-transform duration-300 hover:-translate-y-0.5 active:scale-[0.97];
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-gold/30 px-5 py-2.5 font-medium text-ink transition-all duration-300 hover:border-gold/70 hover:bg-gold/10 active:scale-[0.97];
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-gold/20 px-4 py-2 text-sm font-medium text-muted transition-all duration-300 hover:border-gold/50 hover:text-ink;
+  }
+  .chip-active {
+    @apply border-transparent bg-gold-gradient text-cocoa-950 hover:text-cocoa-950;
+  }
+  .input {
+    @apply w-full rounded-2xl border border-gold/20 bg-surface/60 px-4 py-3 text-ink placeholder:text-muted/60 outline-none transition focus:border-gold/70 focus:ring-2 focus:ring-gold/20;
+  }
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.28em] text-gold;
+  }
+  html[dir='rtl'] .eyebrow {
+    @apply tracking-normal text-sm;
+  }
+  .gold-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgb(var(--gold) / 0.6), transparent);
+  }
+}
+
+/* Gold "melting" shimmer sweep over a gold element */
+.melt {
+  position: relative;
+  overflow: hidden;
+}
+.melt::after {
+  content: '';
+  position: absolute;
+  inset: -50% -20%;
+  background: linear-gradient(115deg, transparent 40%, rgb(255 248 225 / 0.55) 50%, transparent 60%);
+  transform: translateX(-100%);
+  animation: sweep 4.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@keyframes sweep {
+  0%, 55% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+@keyframes drip {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.35); }
+}
+.drip { transform-origin: top; animation: drip 3.2s ease-in-out infinite; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
